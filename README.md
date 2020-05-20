@@ -22,7 +22,12 @@ In this release, I tried to keep it simple. So there are no shadows in the field
 
 ## Running the Code
 
-Required packaged are available in requirements file. You can instsall them by running ```pip install -r requirements```.
+Required packages are available in the requirements file. You can install them by running ```pip install -r requirements```.
 
-The output will be saved in ```output.png```. You can add or remove spheres by changing ```objects``` array.
+The output will be saved in ```output.png```. You can add or remove spheres by changing the ```objects``` array.
 
+## Example Output
+
+![Example Output](https://raw.githubusercontent.com/roozbehsayadi/Ray-Tracing/master/output.png)
+
+*These spheres have the same radius, but they look different from each other.*

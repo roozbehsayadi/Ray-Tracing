@@ -20,5 +20,9 @@ The next step is to see if the object has light or not. To achieve this, for eve
 
 In this release, I tried to keep it simple. So there are no shadows in the field; Just rendering spheres as the supervisor may observe them. 
 
-There's a file named **output.png**. Check it out to get a sense of what exactly this program does. 
+## Running the Code
+
+Required packaged are available in requirements file. You can instsall them by running ```pip install -r requirements```.
+
+The output will be saved in ```output.png```. You can add or remove spheres by changing ```objects``` array.
 

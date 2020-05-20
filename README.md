@@ -28,6 +28,6 @@ The output will be saved in ```output.png```. You can add or remove spheres by c
 
 ## Example Output
 
-![Example Output](https://raw.githubusercontent.com/roozbehsayadi/Ray-Tracing/master/output.png)
+![Example Output](https://www.dl.dropboxusercontent.com/s/p7exl3i8r2by07q/output.png?dl=0)
 
 *These spheres have the same radius, but they look different from each other.*

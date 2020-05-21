@@ -90,6 +90,13 @@ def is_shadowed(point):
 		return True
 
 
+def get_light_amount(obj_index, point):
+	PL = normalize(light_position - point)
+	N = get_normal_vector(objects[obj_index], point)
+	angle = np.dot(N, PL)
+	return np.real(np.clip(angle * np.ones(3), 0.1, 1))
+
+
 def trace_ray(ray_o, ray_d):
 
 	obj_index, distance = get_closest_object_properties(ray_o, ray_d)
@@ -103,7 +110,7 @@ def trace_ray(ray_o, ray_d):
 	if is_shadowed(intersect_point):
 		return objects[obj_index]["color"] * 0.1
 
-	return objects[obj_index]["color"]
+	return np.multiply(objects[obj_index]["color"], get_light_amount(obj_index, intersect_point))
 
 
 def main():

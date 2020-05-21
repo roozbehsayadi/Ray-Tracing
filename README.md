@@ -20,7 +20,7 @@ The next step is to see if the object has light or not. To achieve this, for eve
 
 ## Implementations
 
-In this release, observer can view the spheres and also the spheres cast a shadow on themselves on each other if needed.   
+In this release, observer can view the spheres. Also the spheres cast shadows on each other and themselves if needed.   
 
 ## Running the Code
 

@@ -20,7 +20,7 @@ The next step is to see if the object has light or not. To achieve this, for eve
 
 ## Implementations
 
-In this release, observer can view the spheres. Also the spheres cast shadows on each other and themselves if needed.   
+In this release, observer can view the spheres. There's also a shadow effect between spheres, and a lighting effect on spheres to make a better 3D feeling.     
 
 ## Running the Code
 
@@ -30,6 +30,10 @@ The output will be saved in ```output.png```. You can add or remove spheres by c
 
 ## Example Output
 
-![Example Output](https://www.dl.dropboxusercontent.com/s/9b9yc1un7eh81qr/release-2.png?dl=0)
+![Example Output](https://www.dl.dropboxusercontent.com/s/g7nspqg7jhnhitj/release-3.png?dl=0)
 
-*These spheres have the same radius, but they look different from each other. You can also see the dark parts of each sphere.*
+Notice that:
+
+* These spheres have the same radius, but they look different from each other.
+* Shadow effect. Spheres cast shadow on each other, and also the parts of the spheres that don't face the light are dark.
+* Light effect. The points that are facing the light directly are brighter than other points.  

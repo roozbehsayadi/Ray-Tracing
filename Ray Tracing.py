@@ -14,10 +14,10 @@ color_plane_1 = 1.0 * np.ones(3)
 
 def get_new_plane(point, normal_vector):
 	return dict(type="plane", point=np.array(point), normal=np.array(normal_vector),
-		color=lambda m: (color_plane_0
-			if ((int((m[0] + 0.5 if m[0] > 0 else m[0]) * 2) % 2) == (int(((m[2] + 0.5 if m[2] > 0 else m[2]) * 2) % 2)))
+			color=lambda m: (
+				color_plane_0 if (int((m[0] if m[0] > 0 else m[0] - 0.5) * 2) % 2)
+				== (int((m[2] if m[2] > 0 else m[2] - 0.5) * 2) % 2)
 				else color_plane_1))
-
 
 def normalize(v):
 	norm = np.linalg.norm(v)
@@ -43,7 +43,6 @@ background_color = 0.1 * np.ones(3)
 ambient = 0.1 * np.ones(3)
 
 light_position = np.array([5.0, 5.0, -10.0])
-# light_position = np.array([5, 0.0, 4.0])
 light_color = np.ones(3)
 
 # x0, y0, x1, y1
@@ -140,7 +139,10 @@ def get_light_amount(obj_index, point):
 	return np.real(np.clip(angle * np.ones(3), 0.1, 1))
 
 
-def trace_ray(ray_o, ray_d):
+def trace_ray(depth, ray_o, ray_d):
+
+	if depth < 0:
+		return np.zeros(3)
 
 	obj_index, distance = get_closest_object_properties(ray_o, ray_d)
 	if obj_index == -1:
@@ -154,6 +156,11 @@ def trace_ray(ray_o, ray_d):
 
 	if is_shadowed(intersect_point):
 		return color * 0.1
+
+	reflection_ray_vector = np.real(ray_d - 2 * np.dot(ray_d, object_normal_vector) * object_normal_vector)
+	reflection_ray_color = trace_ray(depth - 1, intersect_point, reflection_ray_vector)
+
+	color = color + reflection_ray_color * 0.5
 
 	return np.multiply(color, get_light_amount(obj_index, intersect_point))
 
@@ -170,7 +177,7 @@ def main():
 			ray_o = camera_position
 			ray_d = normalize(camera_direction - camera_position)
 
-			trace_answer = trace_ray(ray_o, ray_d)
+			trace_answer = trace_ray(3, ray_o, ray_d)
 			trace_answer = trace_answer + ambient
 
 			image[j, i, :] = np.clip(trace_answer, 0, 1)

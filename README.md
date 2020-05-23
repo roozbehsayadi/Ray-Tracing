@@ -18,9 +18,7 @@ We shoot rays from the eye of the supervisor. It may hit an object, or not. If i
 
 The next step is to see if the object has light or not. To achieve this, for every ray we shoot another ray from the hitting point to the light source. If the ray reached the light source, then it has light. Otherwise, it is shadowed. 
 
-## Implementations
-
-In this release, observer can view the spheres. There's also a shadow effect between spheres, and a lighting effect on spheres to make a better 3D feeling.     
+You can checkout output image and list of implemented stuff in the Example Output section below.      
 
 ## Running the Code
 
@@ -30,10 +28,11 @@ The output will be saved in ```output.png```. You can add or remove spheres by c
 
 ## Example Output
 
-![Example Output](https://www.dl.dropboxusercontent.com/s/g7nspqg7jhnhitj/release-3.png?dl=0)
+![Example Output](https://www.dl.dropboxusercontent.com/s/83f4tcfw7fsig3t/release-4.png?dl=0)
 
 Notice that:
 
 * These spheres have the same radius, but they look different from each other.
+* A plane!
 * Shadow effect. Spheres cast shadow on each other, and also the parts of the spheres that don't face the light are dark.
 * Light effect. The points that are facing the light directly are brighter than other points.  

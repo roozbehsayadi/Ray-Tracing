@@ -16,7 +16,11 @@ There's an algorithm called *Backward Tracing*, or as some people prefer to call
 
 We shoot rays from the eye of the supervisor. It may hit an object, or not. If it does hit an object, then we can say that the supervisor has eye contact with that object. Keep in mind that the closest object is considered. 
 
-The next step is to see if the object has light or not. To achieve this, for every ray we shoot another ray from the hitting point to the light source. If the ray reached the light source, then it has light. Otherwise, it is shadowed. 
+The next step is to see if the object has light or not. To achieve this, for every ray we shoot another ray from the hitting point to the light source. If the ray reached the light source, then it has light. Otherwise, it is shadowed.
+
+To get a more natural lighting effect, for every point on an object check if it faces the light source directly or it has angle with light rays. Then you can decide light amount each point gets. 
+
+Another feature for making the render output look more real is reflections; And by reflection I mean seeing a transparent picture of objects inside each other. To achieve this, use recursion on following ray paths. When a ray intersects with a point, calculate its reflection angle and shoot another ray from that point. By recursion you can get its color. Then add the reflection color to original color. Use a coefficient to lower the reflection's effect on color.   
 
 You can checkout output image and list of implemented stuff in the Example Output section below.      
 
@@ -30,11 +34,12 @@ You may notice that rendering an output takes a minute or two on a slower comput
 
 ## Example Output
 
-![Example Output](https://www.dl.dropboxusercontent.com/s/83f4tcfw7fsig3t/release-4.png?dl=0)
+![Example Output](https://www.dl.dropboxusercontent.com/s/6ihvsdp9d3xop58/release-5.png?dl=0)
 
 Notice that:
 
 * These spheres have the same radius, but they look different from each other.
 * A plane!
 * Shadow effect. Spheres cast shadow on each other, and also the parts of the spheres that don't face the light are dark.
-* Light effect. The points that are facing the light directly are brighter than other points.  
+* Light effect. The points that are facing the light directly are brighter than other points.
+* Reflection effect. You can see a transparent reflection of the whole scene in every object.   

@@ -32,11 +32,6 @@ objects = [get_new_sphere([0.75, 0.1, 1.0], 0.6, [0.0, 0.0, 1.0]),
 			get_new_plane([0.0, -0.5, 0.0], [0.0, 1.0, 0.0])
 		]
 
-# objects = [get_new_sphere([1.5, 0.0, 4.0], 0.5, [0.0, 0.0, 1.0]),
-# 		   get_new_sphere([-2.0, 0.0, 4.0], 2.0, [0.0, 1.0, 0.0])]
-
-# objects = [get_new_sphere([0.0, 0.0, 2.0], 0.1, [0.0, 0.0, 1.0])]
-
 # h = 300
 # w = 400
 h = 1080
@@ -75,8 +70,6 @@ def get_distance_sphere(ray_o, ray_d, obj):
 
 
 def get_distance_plane(ray_o, ray_d, obj):
-
-	# print(ray_o, ray_d, end='  ')
 
 	temp = np.dot(ray_d, obj["normal"])
 	if np.abs(temp) < 1e-5:
@@ -162,7 +155,6 @@ def trace_ray(ray_o, ray_d):
 	if is_shadowed(intersect_point):
 		return color * 0.1
 
-	# return color
 	return np.multiply(color, get_light_amount(obj_index, intersect_point))
 
 

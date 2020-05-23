@@ -26,6 +26,8 @@ Required packages are available in the requirements file. You can install them b
 
 The output will be saved in ```output.png```. You can add or remove spheres by changing the ```objects``` array.
 
+You may notice that rendering an output takes a minute or two on a slower computer. In order to accelerate the rendering process, go to the code, and change the lines where h, w and screen_cor are initialized. You can write a value by yourself or you can use the values that are commented on top of the corresponding lines. 
+
 ## Example Output
 
 ![Example Output](https://www.dl.dropboxusercontent.com/s/83f4tcfw7fsig3t/release-4.png?dl=0)

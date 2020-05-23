@@ -5,7 +5,18 @@ import matplotlib.pyplot as plt
 
 
 def get_new_sphere(position, radius, color):
-	return dict(position=np.array(position), radius=radius, color=np.array(color))
+	return dict(type="sphere", position=np.array(position), radius=radius, color=np.array(color))
+
+
+color_plane_0 = 0.0 * np.ones(3)
+color_plane_1 = 1.0 * np.ones(3)
+
+
+def get_new_plane(point, normal_vector):
+	return dict(type="plane", point=np.array(point), normal=np.array(normal_vector),
+		color=lambda m: (color_plane_0
+			if ((int((m[0] + 0.5 if m[0] > 0 else m[0]) * 2) % 2) == (int(((m[2] + 0.5 if m[2] > 0 else m[2]) * 2) % 2)))
+				else color_plane_1))
 
 
 def normalize(v):
@@ -17,30 +28,35 @@ def normalize(v):
 
 objects = [get_new_sphere([0.75, 0.1, 1.0], 0.6, [0.0, 0.0, 1.0]),
 			get_new_sphere([-0.75, 0.1, 2.25], 0.6, [0.5, 0.223, 0.5]),
-			get_new_sphere([-2.75, 0.1, 3.5], 0.6, [1.0, 0.572, 0.184])]
+			get_new_sphere([-2.75, 0.1, 3.5], 0.6, [1.0, 0.572, 0.184]),
+			get_new_plane([0.0, -0.5, 0.0], [0.0, 1.0, 0.0])
+		]
 
 # objects = [get_new_sphere([1.5, 0.0, 4.0], 0.5, [0.0, 0.0, 1.0]),
 # 		   get_new_sphere([-2.0, 0.0, 4.0], 2.0, [0.0, 1.0, 0.0])]
 
 # objects = [get_new_sphere([0.0, 0.0, 2.0], 0.1, [0.0, 0.0, 1.0])]
 
-h = 300
-w = 400
+# h = 300
+# w = 400
+h = 1080
+w = 1920
 image = np.zeros(shape=(h, w, 3))
 
 background_color = 0.1 * np.ones(3)
 
 ambient = 0.1 * np.ones(3)
 
-light_position = np.array([5.0, 1.0, -10.0])
+light_position = np.array([5.0, 5.0, -10.0])
 # light_position = np.array([5, 0.0, 4.0])
 light_color = np.ones(3)
 
 # x0, y0, x1, y1
-screen_cor = [-1, -0.5, 1, 1]
+# screen_cor = [-1, -0.5, 1, 1]
+screen_cor = [-1.2, -0.425, 1.2, 0.925]
 
 
-def get_distance(ray_o, ray_d, obj):
+def get_distance_sphere(ray_o, ray_d, obj):
 	Q = ray_o - obj["position"]
 	a = np.dot(ray_d, ray_d)
 	b = 2 * np.dot(ray_d, Q)
@@ -58,13 +74,47 @@ def get_distance(ray_o, ray_d, obj):
 		return answer
 
 
+def get_distance_plane(ray_o, ray_d, obj):
+
+	# print(ray_o, ray_d, end='  ')
+
+	temp = np.dot(ray_d, obj["normal"])
+	if np.abs(temp) < 1e-5:
+		return np.inf
+
+	OP = obj["point"] - ray_o
+
+	distance = np.real(np.divide(np.dot(OP, obj["normal"]), temp))
+	# print(distance)
+	if distance < 0:
+		return np.inf
+	return distance
+
+
+def get_distance(ray_o, ray_d, obj):
+	if obj["type"] == "sphere":
+		return get_distance_sphere(ray_o, ray_d, obj)
+	if obj["type"] == "plane":
+		return get_distance_plane(ray_o, ray_d, obj)
+
+
 def get_line_point(ray_o, ray_d, distance):
 	return ray_o + ray_d * distance
 
 
 def get_normal_vector(obj, surface_point):
-	center = obj["position"]
-	return normalize(surface_point - center)
+	if obj["type"] == "sphere":
+		center = obj["position"]
+		return normalize(surface_point - center)
+	elif obj["type"] == "plane":
+		return obj["normal"]
+
+
+def get_color(obj, m):
+	color = obj["color"]
+	if not hasattr(color, '__len__'):
+		color = color(m)
+	return color
 
 
 def get_closest_object_properties(ray_o, ray_d):
@@ -107,19 +157,22 @@ def trace_ray(ray_o, ray_d):
 	object_normal_vector = get_normal_vector(objects[obj_index], intersect_point)
 	intersect_point = intersect_point + 0.0001 * object_normal_vector
 
-	if is_shadowed(intersect_point):
-		return objects[obj_index]["color"] * 0.1
+	color = get_color(objects[obj_index], intersect_point)
 
-	return np.multiply(objects[obj_index]["color"], get_light_amount(obj_index, intersect_point))
+	if is_shadowed(intersect_point):
+		return color * 0.1
+
+	# return color
+	return np.multiply(color, get_light_amount(obj_index, intersect_point))
 
 
 def main():
 
-	camera_position = np.array([0.0, 0.35, -1.0])
+	camera_position = np.array([0.0, 0.25, -1.0])
 	camera_direction = np.array([0.0, 0.0, 0.0])
 
 	for i, x in enumerate(np.linspace(screen_cor[0], screen_cor[2], w)):
-		for j, y in enumerate(np.linspace(screen_cor[1], screen_cor[3], h)):
+		for j, y in enumerate(np.linspace(screen_cor[3], screen_cor[1], h)):
 			camera_direction[:2] = (x, y)
 
 			ray_o = camera_position

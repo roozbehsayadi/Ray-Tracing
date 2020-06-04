@@ -1,19 +1,23 @@
 
+# TODO Add reflection coefficient in object's properties
+
 import cmath
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-def get_new_sphere(position, radius, color):
-	return dict(type="sphere", position=np.array(position), radius=radius, color=np.array(color))
+def get_new_sphere(position, radius, color, reflection_coefficient):
+	return dict(type="sphere", position=np.array(position), radius=radius,
+				color=np.array(color), reflection_coefficient=reflection_coefficient)
 
 
 color_plane_0 = 0.0 * np.ones(3)
 color_plane_1 = 1.0 * np.ones(3)
 
 
-def get_new_plane(point, normal_vector):
+def get_new_plane(point, normal_vector, reflection_coefficient):
 	return dict(type="plane", point=np.array(point), normal=np.array(normal_vector),
+			reflection_coefficient=reflection_coefficient,
 			color=lambda m: (
 				color_plane_0 if (int((m[0] if m[0] > 0 else m[0] - 0.5) * 2) % 2)
 				== (int((m[2] if m[2] > 0 else m[2] - 0.5) * 2) % 2)
@@ -26,10 +30,10 @@ def normalize(v):
 	return v / norm
 
 
-objects = [get_new_sphere([0.75, 0.1, 1.0], 0.6, [0.0, 0.0, 1.0]),
-			get_new_sphere([-0.75, 0.1, 2.25], 0.6, [0.5, 0.223, 0.5]),
-			get_new_sphere([-2.75, 0.1, 3.5], 0.6, [1.0, 0.572, 0.184]),
-			get_new_plane([0.0, -0.5, 0.0], [0.0, 1.0, 0.0])
+objects = [get_new_sphere([0.75, 0.1, 1.0], 0.6, [0.0, 0.0, 1.0], 0.4),
+			get_new_sphere([-0.75, 0.1, 2.25], 0.6, [0.5, 0.223, 0.5], 0.3),
+			get_new_sphere([-2.75, 0.1, 3.5], 0.6, [1.0, 0.572, 0.184], 0.2),
+			get_new_plane([0.0, -0.5, 0.0], [0.0, 1.0, 0.0], 0.35)
 		]
 
 # h = 300
@@ -42,7 +46,7 @@ background_color = 0.1 * np.ones(3)
 
 ambient = 0.1 * np.ones(3)
 
-light_position = np.array([5.0, 5.0, -10.0])
+light_position = np.array([2.0, 5.0, -5.0])
 light_color = np.ones(3)
 
 # x0, y0, x1, y1
@@ -155,12 +159,14 @@ def trace_ray(depth, ray_o, ray_d):
 	color = get_color(objects[obj_index], intersect_point)
 
 	if is_shadowed(intersect_point):
-		return color * 0.1
+		return np.zeros(3)
+		# return color * 0.1
 
 	reflection_ray_vector = np.real(ray_d - 2 * np.dot(ray_d, object_normal_vector) * object_normal_vector)
 	reflection_ray_color = trace_ray(depth - 1, intersect_point, reflection_ray_vector)
 
-	color = color + reflection_ray_color * 0.5
+	color = (1 - objects[obj_index]["reflection_coefficient"] ) * color\
+			+ reflection_ray_color * objects[obj_index]["reflection_coefficient"]
 
 	return np.multiply(color, get_light_amount(obj_index, intersect_point))
 

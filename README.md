@@ -34,7 +34,7 @@ You may notice that rendering an output takes a minute or two on a slower comput
 
 ## Example Output
 
-![Example Output](https://www.dl.dropboxusercontent.com/s/od6jj5fsuh6bicr/reflection%20coefficients.png?dl=0)
+![Example Output](https://www.dl.dropboxusercontent.com/s/cf49vx3whfackz7/reflection%20coefficients%20bug%20fix.png?dl=0)
 
 Notice that:
 
@@ -42,4 +42,4 @@ Notice that:
 * A plane!
 * Shadow effect. Spheres cast shadow on each other, and also the parts of the spheres that don't face the light are dark.
 * Light effect. The points that are facing the light directly are brighter than other points.
-* Reflection effect. You can see a transparent reflection of the whole scene in every object. Also each object has its own amount of reflection.    
+* Reflection effect. You can see a transparent reflection of the whole scene in every object. Also each object has its own amount of reflection.

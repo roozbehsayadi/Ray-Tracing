@@ -158,12 +158,12 @@ def trace_ray(depth, ray_o, ray_d):
 
 	color = get_color(objects[obj_index], intersect_point)
 
-	if is_shadowed(intersect_point):
-		return np.zeros(3)
-		# return color * 0.1
-
 	reflection_ray_vector = np.real(ray_d - 2 * np.dot(ray_d, object_normal_vector) * object_normal_vector)
 	reflection_ray_color = trace_ray(depth - 1, intersect_point, reflection_ray_vector)
+
+	if is_shadowed(intersect_point):
+		return 0.1 * ((1 - objects[obj_index]["reflection_coefficient"] ) * color\
+			+ reflection_ray_color * objects[obj_index]["reflection_coefficient"])
 
 	color = (1 - objects[obj_index]["reflection_coefficient"] ) * color\
 			+ reflection_ray_color * objects[obj_index]["reflection_coefficient"]

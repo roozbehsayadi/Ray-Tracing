@@ -46,7 +46,7 @@ background_color = 0.0 * np.ones(3)
 
 ambient = 0.1 * np.ones(3)
 
-light_position = np.array([2.0, 5.0, -5.0])
+light_position = np.array([5.0, 5.0, -10.0])
 light_color = np.ones(3)
 
 # x0, y0, x1, y1
@@ -152,21 +152,27 @@ def trace_ray(depth, ray_o, ray_d):
 	if obj_index == -1:
 		return background_color
 
+	obj = objects[obj_index]
+
 	intersect_point = get_line_point(ray_o, ray_d, distance)
-	object_normal_vector = get_normal_vector(objects[obj_index], intersect_point)
+	object_normal_vector = get_normal_vector(obj, intersect_point)
 	intersect_point = intersect_point + 0.0001 * object_normal_vector
 
-	color = get_color(objects[obj_index], intersect_point)
+	color = get_color(obj, intersect_point)
 
 	reflection_ray_vector = np.real(ray_d - 2 * np.dot(ray_d, object_normal_vector) * object_normal_vector)
 	reflection_ray_color = trace_ray(depth - 1, intersect_point, reflection_ray_vector)
 
 	if is_shadowed(intersect_point):
-		return 0.1 * ((1 - objects[obj_index]["reflection_coefficient"] ) * color\
-			+ reflection_ray_color * objects[obj_index]["reflection_coefficient"])
+		return 0.1 * ((1 - obj["reflection_coefficient"]) * color \
+					+ reflection_ray_color * obj["reflection_coefficient"])
 
-	color = (1 - objects[obj_index]["reflection_coefficient"] ) * color\
-			+ reflection_ray_color * objects[obj_index]["reflection_coefficient"]
+	color = (1 - obj["reflection_coefficient"]) * color \
+			+ reflection_ray_color * obj["reflection_coefficient"]
+
+	toL = normalize(light_position - intersect_point)
+	toO = normalize(ray_o - intersect_point)
+	color += np.real(np.dot(object_normal_vector, normalize(toL + toO))) ** 50 * light_color
 
 	return np.multiply(color, get_light_amount(obj_index, intersect_point))
 

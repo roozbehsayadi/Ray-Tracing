@@ -42,7 +42,7 @@ h = 1080
 w = 1920
 image = np.zeros(shape=(h, w, 3))
 
-background_color = 0.1 * np.ones(3)
+background_color = 0.0 * np.ones(3)
 
 ambient = 0.1 * np.ones(3)
 
